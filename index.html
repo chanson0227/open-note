@@ -13,8 +13,7 @@
   try { file = decodeURIComponent(location.hash.slice(1)); } catch (e) {}
   const url = 'obsidian://open?vault=Body%20Double&file=' + encodeURIComponent(file);
   document.getElementById('go').href = url;
-  if (file) {
-    location.href = url;
-    setTimeout(() => window.close(), 1500); // works only when Chrome allows it
-  } else document.getElementById('msg').textContent = 'No note named in this link.';
+  // No self-closing: closing the tab also kills Chrome's "Open Obsidian?" box before it's answered.
+  if (file) location.href = url;
+  else document.getElementById('msg').textContent = 'No note named in this link.';
 </script>
