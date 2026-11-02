@@ -1,0 +1,20 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Open in Obsidian</title>
+<body style="font: 18px system-ui, sans-serif; margin: 2em">
+<p id="msg">Opening in Obsidian…</p>
+<p><a id="go" href="#" style="display: inline-block; padding: .6em 1.2em; background: #7c3aed; color: #fff; border-radius: 8px; text-decoration: none">Open in Obsidian</a></p>
+<script>
+  // The note path rides after "#", which browsers never send to a server.
+  // Only a path is taken: the vault and the "open" action are fixed here.
+  let file = '';
+  try { file = decodeURIComponent(location.hash.slice(1)); } catch (e) {}
+  const url = 'obsidian://open?vault=Body%20Double&file=' + encodeURIComponent(file);
+  document.getElementById('go').href = url;
+  if (file) {
+    location.href = url;
+    setTimeout(() => window.close(), 1500); // works only when Chrome allows it
+  } else document.getElementById('msg').textContent = 'No note named in this link.';
+</script>
