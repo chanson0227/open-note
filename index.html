@@ -13,7 +13,13 @@
   try { file = decodeURIComponent(location.hash.slice(1)); } catch (e) {}
   const url = 'obsidian://open?vault=Body%20Double&file=' + encodeURIComponent(file);
   document.getElementById('go').href = url;
-  // No self-closing: closing the tab also kills Chrome's "Open Obsidian?" box before it's answered.
-  if (file) location.href = url;
-  else document.getElementById('msg').textContent = 'No note named in this link.';
+  // Close only once Obsidian has covered this tab (it turns hidden), never on a timer: a timer killed
+  // Chrome's "Open Obsidian?" box before it was answered. Left open if it never hides (another screen).
+  if (file) {
+    const t0 = Date.now();
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && Date.now() - t0 < 30000) window.close();
+    });
+    location.href = url;
+  } else document.getElementById('msg').textContent = 'No note named in this link.';
 </script>
