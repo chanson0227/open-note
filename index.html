@@ -18,7 +18,14 @@
   if (file) {
     const t0 = Date.now();
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden && Date.now() - t0 < 30000) window.close();
+      if (!document.hidden || Date.now() - t0 >= 30000) return;
+      window.close();
+      // Still here: Chrome refused. Say why, for the 2026-11-04 diagnosis.
+      const nav = (performance.getEntriesByType('navigation')[0] || {}).type;
+      setTimeout(() => { document.getElementById('msg').textContent =
+        'Obsidian has it; you can close this tab. (Chrome kept it open: history ' + history.length +
+        ', opened by a page: ' + (window.opener ? 'yes' : 'no') + ', came from: ' + (document.referrer || 'none') +
+        ', load: ' + nav + ')'; }, 300);
     });
     location.href = url;
   } else document.getElementById('msg').textContent = 'No note named in this link.';
